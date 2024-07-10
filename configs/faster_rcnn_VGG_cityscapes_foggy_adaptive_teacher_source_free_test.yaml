@@ -1,0 +1,75 @@
+MODEL:
+  META_ARCHITECTURE: "SourceFreeAdaptiveTeacherGeneralizedRCNN"
+  WEIGHTS: /cluster/scratch/username/cityscape_detectron_output/train_cityscape_vgg_new/model_0069999.pth
+  MASK_ON: False
+  BACKBONE:
+    NAME: "build_vgg_backbone"
+  ROI_HEADS:
+    IN_FEATURES: ["vgg4"]
+    NAME: "AdaptiveTeacherStandardROIHeads"
+    NUM_CLASSES: 8
+  ROI_BOX_HEAD:
+    NAME: "FastRCNNConvFCHead"
+    NUM_FC: 2
+    POOLER_RESOLUTION: 7
+  RPN:
+    IN_FEATURES: ["vgg4"]
+    PRE_NMS_TOPK_TEST: 6000
+    POST_NMS_TOPK_TEST: 1000
+  PROPOSAL_GENERATOR:
+    NAME: "PseudoLabRPN"
+INPUT:
+  MIN_SIZE_TRAIN: [600]
+  MIN_SIZE_TEST: 600
+OUTPUT_DIR: /cluster/scratch/username/cityscape_detectron_output/source_free_enhance_without_dc
+DATASETS:
+  #TRAIN: ("cityscapes_instancesonly_train",)
+  #TRAIN: ("cityscapes_instancesonly_foggy_train_foggy_beta_0.02",)
+  TRAIN_TARGET: ("cityscapes_instancesonly_foggy_train_foggy_beta_0.02",)  # inductive setting
+  TEST: ("cityscapes_instancesonly_val", "cityscapes_instancesonly_foggy_val_foggy_beta_0.02")  # inductive setting
+SOLVER:
+  STEPS: (60000, 80000, 90000, 360000)
+  FACTOR_LIST: (1, 1, 1, 1, 1)
+  MAX_ITER: 100000
+  WARMUP_ITERS: 1000
+  CHECKPOINT_PERIOD: 2000
+  IMS_PER_BATCH: 4
+  IMS_PER_BATCH_TARGET: 4
+  # BASE_LR: 0.04
+  BASE_LR: 0.0025
+  # BASE_LR: 0.0005
+TEST:
+  EVAL_PERIOD: 100
+  IMS_PER_BATCH: 2
+DATALOADER:
+  SUP_PERCENT: 100.0
+SEMISUPNET:
+  BBOX_THRESHOLD: 0.8
+  TEACHER_UPDATE_ITER: 1
+  BURN_UP_STEP: 2000 # 20000
+  EMA_KEEP_RATE: 0.9996
+  UNSUP_LOSS_WEIGHT: 1.0
+  SUP_LOSS_WEIGHT: 1.0
+  DIS_TYPE: "vgg4" #["concate","p2","multi"]
+  INS_DC: True
+VIS_PERIOD: 100
+VERSION: 2
+SEED: 42
+ADAPTIVE_THRESHOLD:
+  ENABLED: False
+  WARM_UP: 100
+  RESERVE: 500
+STYLE:
+  ENABLED: True
+  STYLE_IMAGE: /cluster/home/username/pytorch-AdaIN/input/style/meanfoggy.jpg
+  VGG_MODEL: /cluster/home/username/pytorch-AdaIN/models/vgg_normalised.pth
+  DECODER: /cluster/scratch/username/style_transfer_save/decoder_iter_160000.pth.tar
+WEAK_STRONG_AUGMENT: True
+ENHANCE: True
+DOMAIN_CLASSIFIER:
+  ENABLED: True
+  IMAGE: False
+  INSTANCE: False
+TRAINER: "source_free_adaptive_teacher"
+VGG:
+  BN: True

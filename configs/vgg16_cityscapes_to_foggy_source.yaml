@@ -1,0 +1,44 @@
+MODEL:
+  META_ARCHITECTURE: "GeneralizedRCNN"
+  WEIGHTS: /cluster/scratch/username/RDD-DAOD-source-free-2/vgg16.pkl
+  MASK_ON: False
+  BACKBONE:
+    NAME: "build_vgg_backbone"
+  ROI_HEADS:
+    IN_FEATURES: ["vgg4"]
+    NAME: "StandardROIHeads"
+    NUM_CLASSES: 8
+  ROI_BOX_HEAD:
+    NAME: "FastRCNNConvFCHead"
+    NUM_FC: 2
+    POOLER_RESOLUTION: 7
+  RPN:
+    IN_FEATURES: ["vgg4"]
+    PRE_NMS_TOPK_TEST: 6000
+    POST_NMS_TOPK_TEST: 1000
+  PROPOSAL_GENERATOR:
+    NAME: "RPN"
+INPUT:
+  MIN_SIZE_TRAIN: [600]
+  MIN_SIZE_TEST: 600
+OUTPUT_DIR: /cluster/scratch/username/cityscape_detectron_output/vgg16_cityscapes_to_foggy_source_free
+DATASETS:
+  TRAIN: ("cityscapes_instancesonly_train",)
+  TEST: ("cityscapes_instancesonly_val", "cityscapes_instancesonly_foggy_val_foggy_beta_0.02")
+SOLVER:
+  STEPS: (60000, 80000, 90000)
+  FACTOR_LIST: (1, 1, 1)
+  MAX_ITER: 100000
+  WARMUP_ITERS: 1000
+  CHECKPOINT_PERIOD: 10000
+  IMS_PER_BATCH: 4
+  BASE_LR: 0.04
+TEST:
+  EVAL_PERIOD: 10000
+  IMS_PER_BATCH: 1
+VIS_PERIOD: 10000
+VERSION: 2
+SEED: 42
+VGG:
+  BN: False
+TRAINER: "base"

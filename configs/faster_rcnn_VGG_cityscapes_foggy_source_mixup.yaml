@@ -1,0 +1,46 @@
+MODEL:
+  META_ARCHITECTURE: "GeneralizedRCNN"
+  # WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-101.pkl"
+  #WEIGHTS: /cluster/scratch/username/simple-SFOD/vgg16_bn.pkl
+  #WEIGHTS: /cluster/scratch/username/weights/model_0079999.pth
+  WEIGHTS: /cluster/scratch/username/weights/adabn_weight2/adabn.pth
+  MASK_ON: False
+  BACKBONE:
+    NAME: "build_vgg_backbone"
+  ROI_HEADS:
+    IN_FEATURES: ["vgg4"]
+    NAME: "StandardROIHeads"
+    NUM_CLASSES: 8
+  ROI_BOX_HEAD:
+    NAME: "FastRCNNConvFCHead"
+    NUM_FC: 2
+    POOLER_RESOLUTION: 7
+  RPN:
+    IN_FEATURES: ["vgg4"]
+    PRE_NMS_TOPK_TEST: 6000
+    POST_NMS_TOPK_TEST: 1000
+  PROPOSAL_GENERATOR:
+    NAME: "RPN"
+INPUT:
+  MIN_SIZE_TRAIN: [600]
+  MIN_SIZE_TEST: 600
+OUTPUT_DIR: /cluster/scratch/username/simple-SFOD/train_cityscape_mixup_new
+DATASETS:
+  TRAIN: ("cityscapes_instancesonly_foggy_train_foggy_beta_0.02",)
+  TRAIN_TARGET: ("cityscapes_instancesonly_foggy_train_foggy_beta_0.02",)  # inductive setting
+  TEST: ("cityscapes_instancesonly_val", "cityscapes_instancesonly_foggy_val_foggy_beta_0.02")  # inductive setting
+SOLVER:
+  STEPS: (60000, 80000, 90000, 360000)
+  FACTOR_LIST: (1, 1, 1, 1, 1)
+  MAX_ITER: 100000
+  WARMUP_ITERS: 1000
+  CHECKPOINT_PERIOD: 1000
+  IMS_PER_BATCH: 4
+  BASE_LR: 0.0025
+TEST:
+  EVAL_PERIOD: 100
+  IMS_PER_BATCH: 4
+VIS_PERIOD: 1000
+VERSION: 2
+SEED: 42
+TRAINER: "base_mixup"
