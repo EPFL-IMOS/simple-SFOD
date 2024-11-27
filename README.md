@@ -1,8 +1,22 @@
-# Simple SFOD
+<div align='center'>
 
-**Simplifying Source-Free Domain Adaptation for Object Detection: Effective Self-Training Strategies and Performance Insights**
+# Simplifying Source-Free Domain Adaptation for Object Detection: Effective Self-Training Strategies and Performance Insights
 
-[Yan Hao](https://honeyhaoyan.github.io/), [Florent Forest](https://florentfo.rest) and Olga Fink. *ECCV*, 2024.
+[Yan Hao](https://honeyhaoyan.github.io)<sup>1</sup>&nbsp;&nbsp;&nbsp;
+[Florent Forest](https://florentfo.rest)<sup>1</sup>&nbsp;&nbsp;&nbsp;
+[Olga Fink](https://people.epfl.ch/olga.fink)<sup>1</sup>
+<br/>
+<sub>
+<sup>1</sup> Intelligent Maintenance and Operations Systems (IMOS), EPFL, Lausanne, Switzerland
+</sub>
+
+ECCV, 2024
+
+[![Paper](https://img.shields.io/badge/paper-ECCV-174c80)](https://link.springer.com/chapter/10.1007/978-3-031-72949-2_12)&nbsp;&nbsp;&nbsp;[![Arxiv](https://img.shields.io/badge/arXiv-2407.07586-B31B1B)](http://arxiv.org/abs/2407.07586)
+
+</div>
+
+Source code for the implementation of the paper [Simplifying Source-Free Domain Adaptation for Object Detection: Effective Self-Training Strategies and Performance Insights](https://link.springer.com/chapter/10.1007/978-3-031-72949-2_12).
 
 ## Requirements
 
@@ -119,7 +133,7 @@ With fixed pseudo-labels, firstly get the AdaBN model, then use it to initialize
 python train_net.py --num-gpus 1 --config-file configs/faster_rcnn_VGG_cityscapes_foggy_source_wq.yaml
 ```
 
-## Citing our paper
+## Citation
 
 If this work was useful to you, please cite our paper:
 
